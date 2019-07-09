@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 
 export default (props) => {
 
-  const [newTask, setnewTask] = useState("");
+  const [newTask, setNewTask] = useState('');
 
   const onChange = (e) => {
-    setnewTask(e.target.value);
+    setNewTask(e.target.value)
   }
 
   const onSubmit = (e) => {
     e.preventDefault();
-    props.addToDo(newTask);
-    setnewTask('');
+    props.addTask(newTask);
+    setNewTask('');
   }
 
   return(

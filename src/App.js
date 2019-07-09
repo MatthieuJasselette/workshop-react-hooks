@@ -1,45 +1,60 @@
-import React,{useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import uuid from 'uuid';
 
-import AddToDo from './AddToDo';
-import ToDos from './ToDos';
+import AddToDo from './AddToDo.js';
+import TaskMap from './TaskMap.js';
 
 export default () => {
+  const firstTask = [{
+    id: uuid.v4(),
+    title: "Ecrire son premier hooks"
+  },
+  {
+    id: uuid.v4(),
+    title: "Ajouter une tâche",
+    isCompleted : false
+  },
+  {
+    id: uuid.v4(),
+    title: "Supprimer une tâche",
+    isCompleted : false
+  },
+  {
+    id: uuid.v4(),
+    title: "Valider une tâche",
+    isCompleted : false
+  }];
+  const [tasks, setTasks] = useState(firstTask);
+  const [tasksRemaining, setTasksRemaining] = useState(0)
 
-  const [toDo, setToDo] = useState([]);
-  const [remainingTasks, setRemainingTasks] = useState();
-
-  const addToDo = (task) => {
-    const item={
+  const addTask = (newTask) => {
+    const item = {
       id: uuid.v4(),
-      title: task,
-      isCompleted: false
+      title: newTask
     }
-    setToDo([...toDo, item])
+    setTasks([...tasks, item])
   }
 
-  const delToDo = (id) => {
-    setToDo([...toDo.filter(item => item.id !== id)])
+  const delTask = (id) => {
+    setTasks([...tasks.filter(task => task.id !== id)])
   }
 
-  const toggleStatus = (id) => {
-    setToDo(toDo.map(toDo =>{
-      if(toDo.id === id){
-        toDo.isCompleted = !toDo.isCompleted
+  const toggleCompletion = (id) => {
+    setTasks(tasks.map(task =>{
+      if(task.id === id){
+        task.isCompleted = !task.isCompleted
       }
-      return toDo;
+      return task
     }));
   }
 
-  useEffect(()=> {
-    setRemainingTasks(toDo.filter(item => item.isCompleted).length)
-  },[toDo]);
+  useEffect(() => { setTasksRemaining(tasks.filter(task => task.isCompleted).length) }, [tasks]);
 
-  return (
+  return(
     <>
-      <AddToDo addToDo={addToDo}/>
-      <h3>{remainingTasks} completed / {toDo.length} to complete</h3>
-      <ToDos toDo={toDo} onClick={delToDo} toggleStatus={toggleStatus}/>
+      <AddToDo addTask={addTask}/>
+      <h2>Tâche réalisées : {tasksRemaining} / {tasks.length}</h2>
+      <TaskMap tasks={tasks} onClick={delTask} toggleCompletion={toggleCompletion}/>
     </>
   )
 }
